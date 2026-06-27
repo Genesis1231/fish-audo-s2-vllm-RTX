@@ -1,36 +1,7 @@
 # Self-Hosted Streaming TTS & Voice Cloning on RTX 5090 / RTX PRO 6000 — Fish Audio S2-Pro + vLLM
 
-> **Low-latency (~100 ms time-to-first-audio) text-to-speech and instant voice cloning** powered by [Fish Audio's **OpenAudio S2-Pro**](https://huggingface.co/fishaudio/s2-pro) and served with **vLLM-Omni** — a private, self-hosted alternative to ElevenLabs and OpenAI TTS that runs on new **NVIDIA Blackwell** GPUs (`sm_120`, RTX 5090 / RTX PRO 6000) the upstream recipe doesn't cover.
+> **Low-latency (~100 ms time-to-first-audio) text-to-speech and instant voice cloning** powered by [Fish Audio's **OpenAudio S2-Pro**](https://huggingface.co/fishaudio/s2-pro) and served with [**vLLM-Omni**](https://github.com/vllm-project/vllm-omni) — a private, self-hosted alternative to ElevenLabs and OpenAI TTS that runs on new **NVIDIA Blackwell** GPUs (`sm_120`, RTX 5090 / RTX PRO 6000) the upstream recipe doesn't cover.
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
-![CUDA](https://img.shields.io/badge/CUDA-13.0-76B900?logo=nvidia&logoColor=white)
-![vLLM-Omni](https://img.shields.io/badge/vLLM--Omni-0.22-FF6F00)
-![GPU](https://img.shields.io/badge/GPU-RTX%205090%20%7C%20RTX%20PRO%206000%20(Blackwell%20sm__120)-76B900?logo=nvidia&logoColor=white)
-![OpenAI API](https://img.shields.io/badge/API-OpenAI--compatible-412991?logo=openai&logoColor=white)
-![License](https://img.shields.io/badge/License-Fish%20Audio%20Research%20(non--commercial)-blue)
-![Stars](https://img.shields.io/github/stars/Genesis1231/fish-audio-s2-vllm-rtx?style=flat&logo=github)
-
-**Keywords:** `text-to-speech` · `tts` · `streaming-tts` · `voice-cloning` · `self-hosted` · `openaudio-s2` · `fish-speech` · `vllm` · `vllm-omni` · `rtx-5090` · `rtx-pro-6000` · `blackwell` · `sm120` · `real-time` · `low-latency` · `openai-compatible` · `elevenlabs-alternative`
-
----
-
-## Table of Contents
-
-- [Why this exists](#-why-this-exists)
-- [Features](#-features)
-- [Supported GPUs](#-supported-gpus)
-- [Benchmarks](#-benchmarks)
-- [Quick start](#-quick-start)
-- [Usage (curl · Python · OpenAI SDK)](#-usage)
-- [API reference](#-api-reference)
-- [Voice cloning](#-voice-cloning)
-- [Configuration](#-configuration)
-- [How it works (architecture)](#-how-it-works)
-- [Comparison vs alternatives](#-comparison-vs-alternatives)
-- [FAQ](#-faq)
-- [License & credits](#-license--credits)
-
----
 
 ## 🛠 Why this exists
 
@@ -327,7 +298,7 @@ Yes — ≥1 s of clean speech plus its transcript, either as a persistent named
 
 - **Code in this repo:** see [`LICENSE`](LICENSE) — the **Fish Audio Research License Agreement**. Research and **non-commercial** use is free; **commercial use requires a separate license from Fish Audio**.
 - **Model:** [OpenAudio S2-Pro](https://huggingface.co/fishaudio/s2-pro) by [Fish Audio](https://fish.audio/).
-- **Serving:** [vLLM](https://github.com/vllm-project/vllm) / vLLM-Omni.
+- **Serving:** [vLLM](https://github.com/vllm-project/vllm) / [vLLM-Omni](https://github.com/vllm-project/vllm-omni).
 - The vendored `fish_speech/` is included only for the DAC codec the backend imports; model weights and `.venv` live outside the tree and are gitignored.
 
 ---
