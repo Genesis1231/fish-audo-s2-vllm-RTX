@@ -1,0 +1,20 @@
+{
+  "[markdown]": {
+    "editor.inlineSuggest.enabled": true,
+    "editor.quickSuggestions": {
+      "comments": true,
+      "other": true,
+      "strings": true
+    },
+    "editor.suggestOnTriggerCharacters": true,
+    "editor.wordBasedSuggestions": "allDocuments"
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "plaintext": true,
+    "scminput": false
+  },
+  "markdown.suggest.paths.enabled": true,
+  "markdown.suggest.paths.includeWorkspaceHeaderCompletions": "onSingleOrDoubleHash"
+}

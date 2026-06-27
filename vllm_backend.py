@@ -345,10 +345,13 @@ class VLLMEngine:
         raise BackendError(r.status_code if 400 <= r.status_code < 500 else 502, detail)
 
     # ---- generation ------------------------------------------------------
-    def generate(self, text: str, voice: Optional[str], params: dict,
+    def generate(self, text: str, voice: Optional[str] = DEFAULT_VOICE,
+                 params: Optional[dict] = None,
                  ref_audio: Optional[bytes] = None,
                  ref_text: Optional[str] = None) -> tuple[np.ndarray, int]:
-        """Full clip: render the whole utterance, apply breathing, return float32."""
+        """Full clip using the configured default voice unless overridden."""
+        if params is None:
+            params = {}
         self.load()
         body = self._build_body(text, voice, params, ref_audio, ref_text, stream=False)
         r = self._post(body, stream=False)
@@ -359,7 +362,8 @@ class VLLMEngine:
         tail = ext.flush()
         return np.concatenate([out, tail]) if tail.size else out, self._sr
 
-    def generate_stream(self, text: str, voice: Optional[str], params: dict,
+    def generate_stream(self, text: str, voice: Optional[str] = DEFAULT_VOICE,
+                        params: Optional[dict] = None,
                         ref_audio: Optional[bytes] = None,
                         ref_text: Optional[str] = None) -> Iterator[np.ndarray]:
         """Stream vLLM-Omni's PCM as it renders, extending sentence pauses to the
@@ -373,6 +377,8 @@ class VLLMEngine:
         still turn it into a real HTTP status, before StreamingResponse flushes
         its 200. (A failure that only happens mid-stream still can't change the
         already-sent status; that's unavoidable.)"""
+        if params is None:
+            params = {}
         self.load()
         body = self._build_body(text, voice, params, ref_audio, ref_text, stream=True)
         r = self._post(body, stream=True)                  # validates status synchronously

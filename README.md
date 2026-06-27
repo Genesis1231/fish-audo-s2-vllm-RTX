@@ -74,11 +74,11 @@ mkdir -p ../models/s2-pro
 .venv/bin/hf download fishaudio/s2-pro --local-dir ../models/s2-pro
 
 # 3. Extend the official image with Fish Audio's DAC codec dependencies.
-#    The constraints preserve vLLM-Omni's Blackwell-compatible core packages.
 docker pull vllm/vllm-omni:v0.22.0
 docker build -f Dockerfile.vllm -t vllm-omni-fish:local .
 
 # 4. Start the backend and proxy (idempotent; reuses a running container)
+# 4a. if you only plan to use it in python process, just run `./run_vllm_omni.sh`
 ./run.sh
 ```
 
@@ -107,9 +107,9 @@ curl -s -X POST http://localhost:8765/v1/audio/speech \
   -d '{"input":"hi there","voice":"samantha","response_format":"mp3"}' --output out.mp3
 ```
 
-### Python (in-process, no FastAPI)
+### Python (in-process, no server)
 
-Drive the engine straight from your own Python process — no FastAPI proxy needed. You still need the vLLM-Omni **backend** container running (`./run_vllm_omni.sh`, that's where the GPU model lives), but `server.py` doesn't have to be up.
+Drive the engine straight from your own Python process, no FastAPI proxy needed. You still need the vLLM-Omni container running (`./run_vllm_omni.sh`, that's where the GPU model lives), but `server.py` doesn't have to be up.
 
 ```python
 import soundfile as sf
@@ -118,14 +118,22 @@ from vllm_backend import engine          # run from the repo root (or put it on 
 engine.load()                            # connect to the backend + upload voices/ (idempotent)
 
 # Full clip -> float32 numpy array @ 44.1 kHz
-audio, sr = engine.generate("hello from my own GPU", voice=None, params={})
-sf.write("out.wav", audio, sr)           # voice=None -> built-in default (zero-shot)
+audio, sr = engine.generate("hello there, I am running inside your own computer.")
+sf.write("out.wav", audio, sr)           # uses config.json's default_voice
+
+# Override the voice and generation options only when you need to
+audio, sr = engine.generate(
+    "This take is faster and reproducible.",
+    voice="samantha",
+    params={"speed": 1.15, "format": 'aac', "stream_sentence_gap_ms": 450},
+)
+sf.write("custom.wav", audio, sr)
 
 # Stream as it renders, with a cloned voice (needs voices/samantha.{wav,txt})
 # (engine.generate_stream yields float32 PCM; write wav — soundfile mp3 support is
 #  build-dependent. For compressed output, go through the proxy's ffmpeg pipe.)
 with sf.SoundFile("stream.wav", "w", samplerate=engine.sample_rate, channels=1) as f:
-    for chunk in engine.generate_stream("a streamed, cloned hello", voice="samantha", params={}):
+    for chunk in engine.generate_stream("a streamed, cloned hello"):
         f.write(chunk)
 ```
 
@@ -142,7 +150,7 @@ client.audio.speech.create(
 
 # Low-latency streaming
 with client.audio.speech.with_streaming_response.create(
-    model="s2-pro", voice="samantha", input="streamed hello",
+    model="s2-pro", input="streamed hello",
     response_format="pcm", extra_body={"stream": True},
 ) as resp:
     resp.stream_to_file("out.pcm")
@@ -254,9 +262,11 @@ Supports `[whisper]`, `[excited]`, `[laughing]`, `[sigh]`, `[angry]`, plus 15,00
 
 ---
 
-## 📦 Tech stack
+# 📦 Tech stack
 
 `OpenAudio S2-Pro` · `Fish Speech` · `vLLM-Omni 0.22` · `DAC neural codec` · `FastAPI` · `Triton` · `PyTorch 2.11 (cu130)` · `Docker` · `ffmpeg` · `NVIDIA Blackwell sm_120`
+
+---
 
 ## 📄 Credits
 
