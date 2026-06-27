@@ -12,6 +12,7 @@ __pycache__/
 # Virtualenv + build caches (regenerable)
 .venv/
 .cache/
+.vscode/
 
 # Logs / OS cruft
 *.log
