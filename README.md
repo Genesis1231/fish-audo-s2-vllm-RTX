@@ -8,7 +8,7 @@
 ![GPU](https://img.shields.io/badge/GPU-RTX%205090%20%7C%20RTX%20PRO%206000%20(Blackwell%20sm__120)-76B900?logo=nvidia&logoColor=white)
 ![OpenAI API](https://img.shields.io/badge/API-OpenAI--compatible-412991?logo=openai&logoColor=white)
 ![License](https://img.shields.io/badge/License-Fish%20Audio%20Research%20(non--commercial)-blue)
-![Stars](https://img.shields.io/github/stars/Genesis1231/fish-audo-s2-vllm-RTX?style=flat&logo=github)
+![Stars](https://img.shields.io/github/stars/Genesis1231/fish-audio-s2-vllm-rtx?style=flat&logo=github)
 
 **Keywords:** `text-to-speech` · `tts` · `streaming-tts` · `voice-cloning` · `self-hosted` · `openaudio-s2` · `fish-speech` · `vllm` · `vllm-omni` · `rtx-5090` · `rtx-pro-6000` · `blackwell` · `sm120` · `real-time` · `low-latency` · `openai-compatible` · `elevenlabs-alternative`
 
